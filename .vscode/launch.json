@@ -11,6 +11,6 @@
             "mainClass": "${file}",
             "console": "externalTerminal",
             "stopOnEntry": false,
-        },
+        }
     ]
 }
