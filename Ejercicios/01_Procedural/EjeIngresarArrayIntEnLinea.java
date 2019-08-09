@@ -13,12 +13,12 @@ public class EjeIngresarArrayIntEnLinea {
         int[] numeros;
 
         String textoNumeros;
-        char primerCaracter;
+        //char primerCaracter;
 
         System.out.println("Ingrese los numeros separados por espacios");
 
         textoNumeros = Teclado.nextLine();
-        primerCaracter = textoNumeros.charAt(0);
+        //primerCaracter = textoNumeros.charAt(0);
         char[] caracteresTexto = textoNumeros.toCharArray();
         // Primero contar la cantidad de espacios que hay para saber
         // el tamanio del arreglo de numeros

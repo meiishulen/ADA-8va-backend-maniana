@@ -36,6 +36,8 @@ public class EjeOracion {
         System.out.println("Vocales " + cantVocales);
         System.out.println("Espacios " + cantEspacios);
         System.out.println("Puntos " + cantPuntos);
+
+        teclado.close();
     }
 
     static boolean esVocal(char caracter2) {
