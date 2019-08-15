@@ -6,12 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "Debug (Launch)-App<Estacionamiento>",
             "request": "launch",
             "mainClass": "app.App",
@@ -23,6 +17,13 @@
             "request": "launch",
             "mainClass": "app.App",
             "projectName": "Juntada"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-App<PooFlix>",
+            "request": "launch",
+            "mainClass": "app.App",
+            "projectName": "PooFlix"
         }
     ]
 }
