@@ -24,6 +24,13 @@
             "request": "launch",
             "mainClass": "app.App",
             "projectName": "PooFlix"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-App<Cine>",
+            "request": "launch",
+            "mainClass": "app.App",
+            "projectName": "Cine"
         }
     ]
 }
