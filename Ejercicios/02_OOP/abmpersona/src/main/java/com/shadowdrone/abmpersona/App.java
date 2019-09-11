@@ -11,15 +11,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         ABMPersona.setup();
 
-        System.out.println("=======================================");
-        System.out.println("");
-        System.out.println("Para agregar una persona presione 1.");
-        System.out.println("Para eliminar una persona presione 2.");
-        System.out.println("Para modificar una persona presione 3.");
-        System.out.println("Para ver el listado presione 4.");
-        System.out.println("Para terminar presione 0.");
-        System.out.println("");
-        System.out.println("=======================================");
+        printOpciones();
 
         int opcion = Teclado.nextInt();
         Teclado.nextLine();
@@ -43,20 +35,16 @@ public class App {
                 listar();
                 break;
 
+            case 5:
+                listarPorNombre();
+                break;
+
             default:
                 System.out.println("La opcion no es correcta.");
                 break;
             }
 
-            System.out.println("=======================================");
-            System.out.println("");
-            System.out.println("Para agregar una persona presione 1.");
-            System.out.println("Para eliminar una persona presione 2.");
-            System.out.println("Para modificar una persona presione 3.");
-            System.out.println("Para ver el listado presione 4.");
-            System.out.println("Para terminar presione 0.");
-            System.out.println("");
-            System.out.println("=======================================");
+            printOpciones();
 
             opcion = Teclado.nextInt();
             Teclado.nextLine();
@@ -78,7 +66,7 @@ public class App {
         Teclado.nextLine();
         System.out.println("Ingrese el Email:");
         p.setEmail(Teclado.nextLine());
-        
+
         ABMPersona.create(p);
 
         System.out.println("Persona generada con exito.  " + p);
@@ -186,5 +174,29 @@ public class App {
         for (Persona p : todas) {
             System.out.println("Id: " + p.getPesonaId() + " Nombre: " + p.getNombre());
         }
+    }
+
+    public static void listarPorNombre() {
+
+        System.out.println("Ingrese el nombre:");
+        String nombre = Teclado.nextLine();
+
+        List<Persona> personas = ABMPersona.buscarPor(nombre);
+        for (Persona p : personas) {
+            System.out.println("Id: " + p.getPesonaId() + " Nombre: " + p.getNombre());
+        }
+    }
+
+    public static void printOpciones() {
+        System.out.println("=======================================");
+        System.out.println("");
+        System.out.println("Para agregar una persona presione 1.");
+        System.out.println("Para eliminar una persona presione 2.");
+        System.out.println("Para modificar una persona presione 3.");
+        System.out.println("Para ver el listado presione 4.");
+        System.out.println("Buscar una persona por nombre especifico(SQL Injection)) 5.");
+        System.out.println("Para terminar presione 0.");
+        System.out.println("");
+        System.out.println("=======================================");
     }
 }
