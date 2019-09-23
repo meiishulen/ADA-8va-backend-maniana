@@ -1,8 +1,10 @@
 package com.shadowdrone.abmpersona;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 import com.shadowdrone.abmpersona.excepciones.PersonaEdadException;
+import com.shadowdrone.abmpersona.security.Crypto;
 
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -107,7 +109,31 @@ public class App {
             u.setUserName(p.getEmail());
             System.out.println("Su nombre de usuario es " + u.getUserName());
             System.out.println("Ingrese su password:");
-            u.setPassword(Teclado.nextLine());
+            
+            //La password ingresa en texto claro a la variable y luego se encripta
+            String passwordEnTextoClaro;
+            String passwordEncriptada;
+            String passwordEnTextoClaroDesencriptado;
+
+            passwordEnTextoClaro = Teclado.nextLine();
+
+            passwordEncriptada = Crypto.encrypt(passwordEnTextoClaro, "shakalaka!!!");
+
+            passwordEnTextoClaroDesencriptado = Crypto.decrypt(passwordEncriptada, "shakalaka!!!");
+
+            System.out.println("Tu password encriptada es :" +  passwordEncriptada);
+
+            System.out.println("Tu password desencriptada es :" +  passwordEnTextoClaroDesencriptado);
+
+            if (passwordEnTextoClaro.equals(passwordEnTextoClaroDesencriptado))
+            {
+                System.out.println("Ambas passwords coinciden");
+            }
+            else {
+                System.out.println("Las passwords no coinciden, nunca debio entrar aqui");
+            }
+
+            u.setPassword(passwordEncriptada);
 
             /*
              * System.out.println("Su mail es:"); u.setUserEmail(p.getEmail());
@@ -126,6 +152,8 @@ public class App {
         ABMPersona.create(p);
 
         System.out.println("Persona generada con exito.  " + p);
+        if (p.getUsuario() != null)
+            System.out.println("Tambien se le creo un usuario: " + p.getUsuario().getUserName());
     }
 
     public static void baja() {
