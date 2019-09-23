@@ -2,6 +2,11 @@ package com.shadowdrone.abmpersona;
 
 import java.util.*;
 
+import com.shadowdrone.abmpersona.excepciones.PersonaEdadException;
+
+import org.hibernate.exception.ConstraintViolationException;
+
+
 public class App {
 
     public static Scanner Teclado = new Scanner(System.in);
@@ -10,55 +15,72 @@ public class App {
     public static UsuarioManager ABMUsuario = new UsuarioManager();
 
     public static void main(String[] args) throws Exception {
-        ABMPersona.setup();
-        ABMUsuario.setup();
 
-        printOpciones();
+        try {
 
-        int opcion = Teclado.nextInt();
-        Teclado.nextLine();
-
-        while (opcion > 0) {
-
-            switch (opcion) {
-            case 1:
-                alta();
-                break;
-
-            case 2:
-                baja();
-                break;
-
-            case 3:
-                modifica();
-                break;
-
-            case 4:
-                listar();
-                break;
-
-            case 5:
-                listarPorNombre();
-                break;
-
-            default:
-                System.out.println("La opcion no es correcta.");
-                break;
-            }
+            ABMPersona.setup();
+            ABMUsuario.setup();
 
             printOpciones();
 
-            opcion = Teclado.nextInt();
+            int opcion = Teclado.nextInt();
             Teclado.nextLine();
-        }
 
-        // Hago un safe exit del manager
-        ABMPersona.exit();
-        ABMUsuario.exit();
+            while (opcion > 0) {
+
+                switch (opcion) {
+                case 1:
+            
+                    try {
+                        alta();            
+                    } catch (PersonaEdadException exedad){
+                        System.out.println("La edad permitida es a partir de 18 anios");
+                    }
+                    break;
+
+                case 2:
+                    baja();
+                    break;
+
+                case 3:
+                    modifica();
+                    break;
+
+                case 4:
+                    listar();
+                    break;
+
+                case 5:
+                    listarPorNombre();
+                    break;
+
+                default:
+                    System.out.println("La opcion no es correcta.");
+                    break;
+                }
+
+                printOpciones();
+
+                opcion = Teclado.nextInt();
+                Teclado.nextLine();
+            }
+
+            // Hago un safe exit del manager
+            ABMPersona.exit();
+            ABMUsuario.exit();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("Que lindo mi sistema,se rompio mi sistema");
+            throw e;
+        } finally {
+            System.out.println("Saliendo del sistema, bye bye...");
+
+        }
 
     }
 
-    public static void alta() {
+    public static void alta() throws Exception {
         Persona p = new Persona();
         System.out.println("Ingrese el nombre:");
         p.setNombre(Teclado.nextLine());
@@ -66,13 +88,14 @@ public class App {
         p.setDni(Teclado.nextLine());
         System.out.println("Ingrese la edad:");
         p.setEdad(Teclado.nextInt());
+        
         Teclado.nextLine();
         System.out.println("Ingrese el Email:");
         p.setEmail(Teclado.nextLine());
 
-        ABMPersona.create(p);
+        //ABMPersona.create(p);
 
-        System.out.println("Persona generada con exito.  " + p);
+        //System.out.println("Persona generada con exito.  " + p);
 
         System.out.println("Desea crear un usuario para esa persona?");
 
@@ -89,14 +112,20 @@ public class App {
             /*
              * System.out.println("Su mail es:"); u.setUserEmail(p.getEmail());
              */
-            System.out.println("Ingrese su email de usuario:");
-            u.setUserEmail(Teclado.nextLine());
+            //System.out.println("Ingrese su email de usuario:");
+            u.setUserEmail(u.getUserName());
 
-            u.setPersonaId(p.getPesonaId());
-            ABMUsuario.create(u);
+            p.setUsuario(u);
+            ///u.setPersona(p); <- esta linea hariaa falta si no lo hacemos en el p.SetUsuario(u)
+            //u.setPersonaId(p.getPesonaId());
+            //ABMUsuario.create(u);
 
-            System.out.println("Usuario generado con exito.  " + u);
+            //System.out.println("Usuario generado con exito.  " + u);
         }
+
+        ABMPersona.create(p);
+
+        System.out.println("Persona generada con exito.  " + p);
     }
 
     public static void baja() {
@@ -111,8 +140,20 @@ public class App {
             System.out.println("Persona no encontrada.");
 
         } else {
-            ABMPersona.delete(personaEncontrada);
-            System.out.println("El registro de " + personaEncontrada.getDni() + " ha sido eliminado.");
+
+            try {
+
+                ABMPersona.delete(personaEncontrada);
+                System.out.println("El registro de " + personaEncontrada.getDni() + " ha sido eliminado.");
+
+            } catch (ConstraintViolationException exPersonaConUsuario) {
+                System.out.println("No se puede eliminar una persona que tenga usuario");
+
+            } catch (Exception e) {
+                // TODO: handle exception
+                System.out.println("Ocurrio un error al eliminar una persona.Error: " + e.getCause());
+            }
+
         }
     }
 
@@ -132,14 +173,12 @@ public class App {
         }
     }
 
-    public static void modifica() {
+    public static void modifica() throws Exception {
         // System.out.println("Ingrese el nombre de la persona a modificar:");
         // String n = Teclado.nextLine();
 
         System.out.println("Desea modificar un dato de la persona o del usuario? \n1: persona \n2: usuario");
         int seleccion = Teclado.nextInt();
-        
-        
 
         if (seleccion == 1) {
 
@@ -152,8 +191,8 @@ public class App {
 
                 System.out.println(personaEncontrada.toString() + "seleccionado para modificacion.");
 
-                System.out
-                        .println("Elija qué dato de la persona desea modificar: \n1: nombre, \n2: DNI, \n3: edad, \n4: email");
+                System.out.println(
+                        "Elija qué dato de la persona desea modificar: \n1: nombre, \n2: DNI, \n3: edad, \n4: email");
                 int selecper = Teclado.nextInt();
 
                 switch (selecper) {
@@ -167,32 +206,28 @@ public class App {
                     System.out.println("Ingrese el nuevo DNI:");
                     Teclado.nextLine();
                     personaEncontrada.setDni(Teclado.nextLine());
-                    
 
                     break;
                 case 3:
                     System.out.println("Ingrese la nueva edad:");
                     Teclado.nextLine();
                     personaEncontrada.setEdad(Teclado.nextInt());
-                    
 
                     break;
                 case 4:
-                System.out.println("Ingrese el nuevo Email:");
-                Teclado.nextLine();
-                personaEncontrada.setEmail(Teclado.nextLine());
-                
-                break;
+                    System.out.println("Ingrese el nuevo Email:");
+                    Teclado.nextLine();
+                    personaEncontrada.setEmail(Teclado.nextLine());
+
+                    break;
 
                 default:
                     break;
                 }
 
                 // Teclado.nextLine();
-                
-                ABMPersona.update(personaEncontrada);
-                
 
+                ABMPersona.update(personaEncontrada);
 
                 System.out.println("El registro de " + personaEncontrada.getNombre() + " ha sido modificado.");
 
@@ -205,34 +240,28 @@ public class App {
             System.out.println("Ingrese el ID del usuario que desea modificar:");
             int idu = Teclado.nextInt();
             Usuario usuarioEncontrado = ABMUsuario.read(idu);
-            
-
 
             if (usuarioEncontrado != null) {
 
-                System.out.println(usuarioEncontrado.toString()+ "seleccionado para modificacion.");
-
+                System.out.println(usuarioEncontrado.toString() + "seleccionado para modificacion.");
 
                 System.out.println("Elija qué dato del usuario desea modificar: 1: email, 2: password");
                 int selecus = Teclado.nextInt();
 
-                if (selecus == 1){
+                if (selecus == 1) {
                     System.out.println("Ingrese el nuevo Email de usuario:");
                     Teclado.nextLine();
                     usuarioEncontrado.setUserEmail(Teclado.nextLine());
-                }
-                else {
+                } else {
                     System.out.println("Ingrese la nueva password de usuario:");
                     Teclado.nextLine();
                     usuarioEncontrado.setPassword(Teclado.nextLine());
                 }
-            
-                
-            ABMUsuario.update(usuarioEncontrado);
-            
-            System.out.println("El registro de "+usuarioEncontrado.getUserName() +" ha sido modificado.");
-            }
-            else {
+
+                ABMUsuario.update(usuarioEncontrado);
+
+                System.out.println("El registro de " + usuarioEncontrado.getUserName() + " ha sido modificado.");
+            } else {
                 System.out.println("Usuario no encontrado.");
             }
 

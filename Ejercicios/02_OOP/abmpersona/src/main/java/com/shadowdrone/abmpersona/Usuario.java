@@ -13,13 +13,20 @@ public class Usuario {
     @Column(name = "usuario_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int usuarioId;
+    private Integer usuarioId;
     private String userName;
     private String password;
     @Column (name= "email")
     private String userEmail;
-    @Column(name = "persona_id")
-    private int personaId;
+    /*@Column(name = "persona_id")
+    private int personaId;*/
+    
+//ACTIVO lel OneTo One, pero para que funcione persona tiene quetener un valor. Aca no hace falta el cascade
+  @OneToOne
+    @JoinColumn(name = "persona_id", referencedColumnName = "persona_id")
+    //@MapsId
+    private Persona persona;
+
 
     public Usuario (String userName, String password, String email){
         this.userName = userName;
@@ -68,11 +75,12 @@ public class Usuario {
         this.userEmail = userEmail;
     }
 
+    
     @Override
     public String toString() {
         return "Usuario [User Name=" + userName + ", Password=" + password + ", User Email=" + userEmail + "]";
     }
-
+/*
     public int getPersonaId() {
         return personaId;
     }
@@ -83,6 +91,14 @@ public class Usuario {
 
     public Usuario(int personaId) {
         this.personaId = personaId;
+    }*/
+    
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
     }
 
     /*public String getEmail() {
