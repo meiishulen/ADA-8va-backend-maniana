@@ -25,7 +25,7 @@ public class Crypto {
     // En la vida real, la secretKey estara guardada en algun lado en forma segura y
     // No sera
     // estatica
-    private static String secretKey = "boooooooooom!!!!";
+    private static String secretKey = "las papas dia no son tan ricas!!!!";
 
     public static String encrypt(String strToEncrypt, String salt) {
         try {

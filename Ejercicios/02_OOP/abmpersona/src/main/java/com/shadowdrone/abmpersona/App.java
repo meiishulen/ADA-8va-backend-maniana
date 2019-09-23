@@ -117,9 +117,9 @@ public class App {
 
             passwordEnTextoClaro = Teclado.nextLine();
 
-            passwordEncriptada = Crypto.encrypt(passwordEnTextoClaro, "shakalaka!!!");
+            passwordEncriptada = Crypto.encrypt(passwordEnTextoClaro, u.getUserName());
 
-            passwordEnTextoClaroDesencriptado = Crypto.decrypt(passwordEncriptada, "shakalaka!!!");
+            passwordEnTextoClaroDesencriptado = Crypto.decrypt(passwordEncriptada, u.getUserName());
 
             System.out.println("Tu password encriptada es :" +  passwordEncriptada);
 
@@ -142,7 +142,7 @@ public class App {
             u.setUserEmail(u.getUserName());
 
             p.setUsuario(u);
-            ///u.setPersona(p); <- esta linea hariaa falta si no lo hacemos en el p.SetUsuario(u)
+            //u.setPersona(p); <- esta linea hariaa falta si no lo hacemos en el p.SetUsuario(u)
             //u.setPersonaId(p.getPesonaId());
             //ABMUsuario.create(u);
 
