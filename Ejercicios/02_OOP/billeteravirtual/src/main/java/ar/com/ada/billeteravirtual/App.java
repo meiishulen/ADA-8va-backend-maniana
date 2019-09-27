@@ -1,5 +1,6 @@
 package ar.com.ada.billeteravirtual;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class App {
 
     public static PersonaManager ABMPersona = new PersonaManager();
     public static UsuarioManager ABMUsuario = new UsuarioManager();
+    public static BilleteraManager ABMBilletera = new BilleteraManager();
 
     public static void main(String[] args) throws Exception {
 
@@ -23,6 +25,7 @@ public class App {
 
             ABMPersona.setup();
             ABMUsuario.setup();
+            ABMBilletera.setup();
 
             printOpciones();
 
@@ -71,6 +74,7 @@ public class App {
             // Hago un safe exit del manager
             ABMPersona.exit();
             ABMUsuario.exit();
+            ABMBilletera.exit();
 
         } catch (Exception e) {
             // TODO: handle exception
@@ -100,12 +104,13 @@ public class App {
 
         //System.out.println("Persona generada con exito.  " + p);
 
+        /* Ahora se crearara siempre un usuario
         System.out.println("Desea crear un usuario para esa persona?");
 
         String rta;
         rta = Teclado.nextLine();
         if (rta.equals("si")) {
-
+*/
             Usuario u = new Usuario();
             u.setUserName(p.getEmail());
             System.out.println("Su nombre de usuario es " + u.getUserName());
@@ -148,14 +153,44 @@ public class App {
             //ABMUsuario.create(u);
 
             //System.out.println("Usuario generado con exito.  " + u);
-        }
+        //}
+
+        //Billetera data
 
         ABMPersona.create(p);
 
         System.out.println("Persona generada con exito.  " + p);
         if (p.getUsuario() != null)
             System.out.println("Tambien se le creo un usuario: " + p.getUsuario().getUserName());
-    }
+
+        System.out.println("Vamos a crearte una billetera con 100 pesitos!");
+
+        Billetera b = new Billetera();
+
+        Cuenta cuenta = new Cuenta();
+        cuenta.setMoneda("ARS");
+        
+        b.agregarCuenta(cuenta);
+
+        p.setBilletera(b);
+
+        ABMBilletera.create(b);
+
+        //Una vez creada, recien ahora se puede cargar movimientos ya que se necesita el useer id creado.
+
+        b.agregarPlata(100, "Regalo", "Te regalo 100 pesitos");
+
+        ABMBilletera.update(b);
+
+        //Consulto la billetera desde 0 para ver si el saldo esta ok!
+
+        Billetera b2 = ABMBilletera.read(b.getBilleteraId());
+
+        System.out.println("Te regalamos "+b2.consultarSaldoCuentaUnica()+" pesitos disfrutalos!!");
+    
+
+
+        }
 
     public static void baja() {
         System.out.println("Ingrese el nombre:");
