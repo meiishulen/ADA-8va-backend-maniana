@@ -21,7 +21,7 @@ public class PersonaController {
     PersonaService personaService;
 
     @GetMapping("/personas")
-    public List<Persona> GetPersonas()
+    public List<Persona> getPersonas()
     {
         List<Persona> lp = personaService.getPersonas();
         
@@ -29,7 +29,7 @@ public class PersonaController {
     }
 
     @GetMapping("/personas/{id}")
-    public Persona GetPersonaById(@PathVariable int id)
+    public Persona getPersonaById(@PathVariable int id)
     {
         Persona p = personaService.buscarPorId(id);
         
