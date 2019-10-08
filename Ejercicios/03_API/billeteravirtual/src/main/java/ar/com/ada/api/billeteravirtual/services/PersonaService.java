@@ -23,11 +23,21 @@ public class PersonaService {
         return repo.findAll();
     }
 
+    
+    public List<Persona> buscarPersonasOrdenadoPorNombre() {
+
+        return repo.findAllOrderByNombre();
+    }
+
     public Persona buscarPorNombre(String nombre) {
 
         return repo.findByNombre(nombre);
     }
  
+    public List<Persona> buscarTodosPorNombre(String nombre) {
+
+        return repo.findAllByNombreContiene(nombre);
+    }
     
     public Persona buscarPorDni(String dni) {
 

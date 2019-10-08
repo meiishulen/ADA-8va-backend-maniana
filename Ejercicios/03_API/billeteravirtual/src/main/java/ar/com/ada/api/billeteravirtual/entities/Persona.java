@@ -11,6 +11,15 @@ import ar.com.ada.api.billeteravirtual.excepciones.*;
  */
 @Entity
 @Table(name = "persona")
+// Named query usando JPQL donde se hace SELECT sobre el Objeto Persona. En este caso se usa un Like para traer aquellos que contengan ese nombre
+// El parametro ?1 indica que al query se le pasara UN parametro.
+// El campo nombre indica el nombre de la funcion que debe tener en el Repository
+// Yo recomiendo usar los NamedQueries en el Repo para no llenarlo en el objecto
+@NamedQuery(name = "Persona.findAllByNombreContiene", query = "FROM Persona WHERE nombre like CONCAT('%', ?1,'%')")
+//Este es un caso de named query igual al anterior, solo con 2 parametros
+@NamedQuery(name = "Persona.findAllByNombreAndDNI", query = "SELECT p FROM Persona p WHERE p.nombre = ?1 AND p.dni = ?2")
+//Este caso es un query usando SQL Puro, los parametros van en formato ? y se deben pasar en orden a la funcion del repo(ver PersonaRepository)
+@NamedNativeQuery(name = "Persona.findAllByNombreConAndEdad", query = "SELECT * FROM persona WHERE nombre like CONCAT('%', ?,'%') AND edad = ?", resultClass = Persona.class)
 public class Persona {
 
     @Id
