@@ -5,7 +5,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Cuenta
@@ -21,11 +32,11 @@ public class Cuenta {
 
     private String moneda;
 
-    private BigDecimal saldo;
+    private BigDecimal saldo = new BigDecimal(0);
 
     @Column(name = "saldo_disponible")
-    private BigDecimal saldoDisponible;
-
+    private BigDecimal saldoDisponible = new BigDecimal(0);;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "billetera_id", referencedColumnName = "billetera_id")
     private Billetera billetera;
@@ -97,5 +108,21 @@ public class Cuenta {
 
         this.movimientos.add(m);
     }
+
+    public void descontarPlata(int usuarioOr, String concepto, BigDecimal importe, String detalle){
+        Movimiento m = new Movimiento();
+
+        m.setCuenta(this);
+        m.setTipoOperacion("EGRESO");
+        m.setImporte(importe.negate());
+        m.setConceptoOperacion(concepto);
+        m.setFechaMovimiento(new Date());
+        m.setDeUsuarioId(usuarioOr);
+        m.setaUsuarioId(usuarioOr);
+        m.setDeCuentaId(this.cuentaId);
+        m.setaCuentaId(this.cuentaId);
+
+    }
+
 
 }

@@ -2,6 +2,7 @@ package ar.com.ada.api.billeteravirtual.entities;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -54,9 +55,33 @@ public class Billetera {
         cuenta.setBilletera(this);
     }
 
-    public void agregarPlata(BigDecimal plata, String concepto, String detalle) {
-        // Agarro el primero y le meto plata
-        this.cuentas.get(0).agregarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
+    public void agregarPlata(BigDecimal plata,String moneda, String concepto, String detalle) {
+        // Agarro el primero y le meto plata (esto se hacia antes porqeu le agregaba a la primer cuenta)
+        //this.cuentas.get(0).agregarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
+        this.buscarCuenta(moneda).agregarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
+    
+    }
+
+    public void descontarPlata(BigDecimal plata,String moneda, String concepto, String detalle) {
+        this.buscarCuenta(moneda).descontarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
+    
+    }
+
+    public void transferencia (Billetera aBilletera,BigDecimal plata,String moneda, String concepto, String detalle){
+        this.descontarPlata(plata, moneda, concepto, detalle);
+        aBilletera.agregarPlata(plata, moneda, concepto, detalle);
+    }
+
+
+    private Cuenta buscarCuenta (String moneda){
+        for (Cuenta cta : this.cuentas) {
+            if (moneda.equals(cta.getMoneda())) {
+                return cta;
+            }
+            
+        }
+
+        return null;
     }
 
     public BigDecimal consultarSaldoCuentaUnica()
