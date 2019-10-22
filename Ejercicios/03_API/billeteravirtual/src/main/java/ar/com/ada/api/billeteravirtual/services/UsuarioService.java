@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.billeteravirtual.entities.Billetera;
@@ -49,6 +50,12 @@ public class UsuarioService {
 
     }
 
+    public Usuario buscarPorUsername(String username) {
+
+        return repo.findByUserName(username);
+
+    }
+
     public int crearUsuario(String fullName, String dni, String email, int edad, String password)
 
             throws PersonaEdadException {
@@ -79,7 +86,7 @@ public class UsuarioService {
 
         Cuenta c = new Cuenta();
 
-        c.setMoneda("ARS"); //Moneda inicial en ARS.
+        c.setMoneda("ARS"); // Moneda inicial en ARS.
         b.agregarCuenta(c);
 
         billeteraService.grabar(b);
@@ -87,6 +94,17 @@ public class UsuarioService {
         b.agregarPlata(new BigDecimal(100), "ARS", "Regalo", "Te regalo 100 pesitos");
 
         return u.getUsuarioId();
+
+    }
+
+    public void login(String username, String password) {
+
+        Usuario u = repo.findByUserName(username);
+
+        if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getUserName()))) {
+
+            throw new BadCredentialsException("Usuario o contraseña invalida");
+        }
 
     }
 
