@@ -1,0 +1,25 @@
+ejemplo de post serie
+
+{
+	"nombre":"Breaking Bad",
+	"año" : 2008,
+	"genero" : "Drama",
+	"temporadas": [
+		{
+		"numeroTemporada":5,
+		"episodios": [
+			{
+				"nroEpisodio": 7,
+				"titulo": "Say my name",
+				"duracion": 43
+				
+			},
+			{
+				"nroEpisodio": 14,
+				"titulo": "Ozymandias",
+				"duracion": 41
+			}
+			]
+		}
+		]
+}
