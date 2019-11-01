@@ -10,8 +10,7 @@ import ar.com.ada.mongo.nefly.entities.*;
  * UsuarioRepository
  */
 @Repository
-public interface UsuarioRepository extends MongoRepository<Usuario, ObjectId> {
-    Usuario findBy_id(ObjectId _id);    
-    Usuario findByUserName(String userName);
-    Usuario findByUserEmail(String email);
+public interface SerieRepository extends MongoRepository<Serie, ObjectId> {
+    Serie findBy_id(ObjectId _id); 
+    Serie findByNombre(String nombre);
 }

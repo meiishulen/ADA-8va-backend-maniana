@@ -18,25 +18,21 @@ public class Usuario {
     private String userName;
     private String password;
     private String userEmail;
-    
 
-
-    public Usuario (String userName, String password, String email){
+    public Usuario(String userName, String password, String email) {
         this.userName = userName;
         this.password = password;
         this.userEmail = email;
     }
 
-    public Usuario(){
+    public Usuario() {
 
     }
 
-
-    public Usuario (String password){
+    public Usuario(String password) {
         this.password = password;
     }
 
-    
     public ObjectId get_id() {
         return _id;
     }
@@ -69,12 +65,10 @@ public class Usuario {
         this.userEmail = userEmail;
     }
 
-    
     @Override
     public String toString() {
         return "Usuario [User Name=" + userName + ", Password=" + password + ", User Email=" + userEmail + "]";
     }
-
 
     public String getFullName() {
         return fullName;
@@ -83,8 +77,5 @@ public class Usuario {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-
-
-
 
 }

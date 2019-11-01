@@ -34,8 +34,8 @@ public class AuthController {
     @Autowired
     private JWTUserDetailsService userDetailsService;
 
-    @PostMapping("auth/register")
-    public RegistrationResponse postRegisterUser(@RequestBody RegistrationRequest req)  {
+    @PostMapping("api/auth/register")
+    public RegistrationResponse postRegisterUser(@RequestBody RegistrationRequest req) {
         RegistrationResponse r = new RegistrationResponse();
         // aca creamos la persona y el usuario a travez del service.
 
@@ -48,14 +48,13 @@ public class AuthController {
 
     }
 
-    @PostMapping("auth/login")
+    @PostMapping("api/auth/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest authenticationRequest)
             throws Exception {
 
         usuarioService.login(authenticationRequest.username, authenticationRequest.password);
 
-        final UserDetails userDetails = userDetailsService
-            .loadUserByUsername(authenticationRequest.username);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.username);
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
