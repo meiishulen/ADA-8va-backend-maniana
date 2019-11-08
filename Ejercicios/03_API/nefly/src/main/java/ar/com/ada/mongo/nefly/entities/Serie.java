@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Series")
 public class Serie extends Contenido {
 
-    public List<Temporada> temporadas = new ArrayList<Temporada>();
+    private List<Temporada> temporadas = new ArrayList<Temporada>();
 
     public Temporada getTemporada(int nro) {
         // Recorrer cada temporada
@@ -26,5 +26,13 @@ public class Serie extends Contenido {
         }
 
         return null;
+    }
+
+    public List<Temporada> getTemporadas() {
+        return temporadas;
+    }
+
+    public void setTemporadas(List<Temporada> temporadas) {
+        this.temporadas = temporadas;
     }
 }
