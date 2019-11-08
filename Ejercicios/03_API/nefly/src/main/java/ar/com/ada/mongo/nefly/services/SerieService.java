@@ -37,7 +37,7 @@ public class SerieService {
     }
 
     public enum SerieValidationType {
-
+        
         SERIE_OK,
         TEMPORADAS_NULA, 
         TEMPORADAS_VACIA, 
@@ -51,7 +51,7 @@ public class SerieService {
     public SerieValidationType verificarSerie(Serie serie) {
 
         if (serie.getNombre() == null)
-            return SerieValidationType.SERIE_OK;
+            return SerieValidationType.SERIE_DATOS_INVALIDOS;
 
         if (serie.getAño() <= 0)
             return SerieValidationType.SERIE_DATOS_INVALIDOS;
