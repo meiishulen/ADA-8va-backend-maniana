@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import ar.com.ada.mongo.nefly.entities.Episodio;
@@ -17,18 +18,20 @@ import ar.com.ada.mongo.nefly.services.SerieService.SerieValidationType;
 @SpringBootTest
 class DemoApplicationTests {
 
+	@Autowired
+	SerieService serieService;
+
 	@Test
 	void contextLoads() {
 	}
 
 	@Test
 	void verificarSerie() {
-		SerieService service = new SerieService();
-
+		
 		Serie serie = new Serie();
 		
 
-		SerieValidationType validationType = service.verificarSerie(serie);
+		SerieValidationType validationType = serieService.verificarSerie(serie);
 		
 		assertEquals(SerieValidationType.SERIE_DATOS_INVALIDOS, validationType);
 
@@ -36,7 +39,6 @@ class DemoApplicationTests {
 
 	@Test
 	void verificarSerieTempDuplicada() {
-		SerieService service = new SerieService();
 
 		Serie serie = new Serie();
 		serie.setNombre("Breaking Bad");
@@ -63,7 +65,7 @@ class DemoApplicationTests {
 		temporada2.getEpisodios().add(e);
 		
 
-		SerieValidationType serieValidationType = service.verificarSerie(serie);
+		SerieValidationType serieValidationType = serieService.verificarSerie(serie);
 		
 		assertEquals(SerieValidationType.TEMPORADA_DUPLICADA, serieValidationType);
 
