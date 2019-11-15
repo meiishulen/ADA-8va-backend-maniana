@@ -50,7 +50,7 @@ public class AuthController {
 
     }
 
-    @PostMapping("auth/login")
+    @PostMapping("auth/login") //probando 1 2 3
     public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest authenticationRequest)
             throws Exception {
 
