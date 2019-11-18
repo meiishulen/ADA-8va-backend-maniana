@@ -92,7 +92,12 @@ public class Cuenta {
         this.movimientos = movimientos;
     }
 
-    public void agregarPlata(int usuarioDe, String concepto, BigDecimal importe, String detalle) {
+    public void agregarPlata(String concepto, BigDecimal importe, String detalle) {
+        
+        this.agregarPlata(this.billetera.getPersona().getUsuario().getUsuarioId(), this.cuentaId, concepto , importe, detalle);
+    }
+
+    public void agregarPlata(int usuarioDe, int cuentaDe, String concepto, BigDecimal importe, String detalle) {
         Movimiento m = new Movimiento();
 
         m.setCuenta(this);
@@ -102,14 +107,18 @@ public class Cuenta {
         m.setDetalle(detalle);
         m.setFechaMovimiento(new Date());
         m.setDeUsuarioId(usuarioDe);
-        m.setaUsuarioId(usuarioDe);
-        m.setDeCuentaId(this.cuentaId);
+        m.setaUsuarioId(this.billetera.getPersona().getUsuario().getUsuarioId());
+        m.setDeCuentaId(cuentaDe);
         m.setaCuentaId(this.cuentaId);
 
         this.movimientos.add(m);
     }
 
-    public void descontarPlata(int usuarioOr, String concepto, BigDecimal importe, String detalle){
+    /*public void descontarPlata(int usuarioA, String concepto, BigDecimal importe, String detalle){
+        descontarPlata(int usuarioA,  int cuentaA, String concepto, BigDecimal importe, String detalle){
+
+    }*/
+    public void descontarPlata(int usuarioA,  int cuentaA, String concepto, BigDecimal importe, String detalle){
         Movimiento m = new Movimiento();
 
         m.setCuenta(this);
@@ -117,10 +126,10 @@ public class Cuenta {
         m.setImporte(importe.negate());
         m.setConceptoOperacion(concepto);
         m.setFechaMovimiento(new Date());
-        m.setDeUsuarioId(usuarioOr);
-        m.setaUsuarioId(usuarioOr);
+        m.setDeUsuarioId(this.billetera.getPersona().getUsuario().getUsuarioId());
+        m.setaUsuarioId(usuarioA);
         m.setDeCuentaId(this.cuentaId);
-        m.setaCuentaId(this.cuentaId);
+        m.setaCuentaId(cuentaA);
 
     }
 

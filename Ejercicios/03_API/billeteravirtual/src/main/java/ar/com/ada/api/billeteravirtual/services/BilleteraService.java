@@ -46,15 +46,18 @@ public class BilleteraService<MovimientoController> {
 
     }
 
-    public void descontarPlata(Billetera billetera, BigDecimal plata, String moneda, String concepto, String detalle) {
+    /*public void descontarPlata(Billetera billetera, BigDecimal plata, String moneda, String concepto, String detalle) {
         billetera.descontarPlata(plata, moneda, concepto, detalle);
-    }
+    }*/
 
     public void transferencia (Billetera deBilletera, String email ,BigDecimal plata, String moneda, String concepto, String detalle){
         Billetera aBilletera;
 
         aBilletera = usuarioService.buscarPorEmail(email).getPersona().getBilletera();
         deBilletera.transferencia(aBilletera, plata, moneda, concepto, detalle);
+
+        this.billeRepo.save(deBilletera);
+        this.billeRepo.save(aBilletera);
     }
 
     public Cuenta buscarCuentaPorMoneda(Billetera b, String moneda){

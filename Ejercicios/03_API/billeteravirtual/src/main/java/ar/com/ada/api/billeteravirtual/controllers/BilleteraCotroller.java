@@ -70,7 +70,7 @@ public class BilleteraCotroller {
         billeteraService.transferencia(bOrigen, req.email, req.importeATransferir, req.moneda, req.concepto,
                 req.detalle);
 
-        billeteraService.grabar(bOrigen);
+        //billeteraService.grabar(bOrigen);
 
         TransferResponse r = new TransferResponse();
         r.isOk = true;

@@ -58,18 +58,37 @@ public class Billetera {
     public void agregarPlata(BigDecimal plata,String moneda, String concepto, String detalle) {
         // Agarro el primero y le meto plata (esto se hacia antes porqeu le agregaba a la primer cuenta)
         //this.cuentas.get(0).agregarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
-        this.buscarCuenta(moneda).agregarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
+        this.buscarCuenta(moneda).agregarPlata(concepto, plata, detalle);
     
     }
 
-    public void descontarPlata(BigDecimal plata,String moneda, String concepto, String detalle) {
+    /*public void descontarPlata(BigDecimal plata,String moneda, String concepto, String detalle) {
         this.buscarCuenta(moneda).descontarPlata(persona.getUsuario().getUsuarioId(), concepto, plata, detalle);
     
-    }
+    }*/
 
     public void transferencia (Billetera aBilletera,BigDecimal plata,String moneda, String concepto, String detalle){
-        this.descontarPlata(plata, moneda, concepto, detalle);
-        aBilletera.agregarPlata(plata, moneda, concepto, detalle);
+        Cuenta ctaD = this.buscarCuenta(moneda); //.descontarPlata(this.getPersona().getUsuario().getUsuarioId(),
+        Cuenta ctaA = aBilletera.buscarCuenta(moneda);
+        //plata,  concepto, detalle);
+
+        Movimiento m = new Movimiento();
+
+        m.setCuenta(ctaD);
+        m.setTipoOperacion("EGRESO");
+        m.setImporte(plata.negate());
+        m.setConceptoOperacion(concepto);
+        m.setDetalle(detalle);
+        m.setFechaMovimiento(new Date());
+        m.setDeUsuarioId(this.getPersona().getUsuario().getUsuarioId());
+        m.setaUsuarioId(aBilletera.getPersona().getUsuario().getUsuarioId());
+        m.setDeCuentaId(ctaD.getCuentaId());
+        m.setaCuentaId(ctaA.getCuentaId());
+
+        ctaD.getMovimientos().add(m);
+
+        ctaA.agregarPlata(this.getPersona().getUsuario().getUsuarioId(),this.buscarCuenta(moneda).getCuentaId(),
+               concepto, plata, detalle);
     }
 
 
