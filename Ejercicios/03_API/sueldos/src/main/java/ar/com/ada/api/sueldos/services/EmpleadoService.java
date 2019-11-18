@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.sueldos.entities.Categoria;
 import ar.com.ada.api.sueldos.entities.Empleado;
+import ar.com.ada.api.sueldos.excepciones.EmpleadoException;
 import ar.com.ada.api.sueldos.repo.EmpleadoRepository;
 
 /**
@@ -31,21 +32,30 @@ public class EmpleadoService {
         return repo.findById(id);
     }
 
-    public void save(Empleado e) {
+    public void grabar(Empleado e) throws EmpleadoException {
+        EmpleadoValidationType r = this.verificarEmpleado(e);
+
+        if (r != EmpleadoValidationType.EMPLEADO_OK)
+            throw new EmpleadoException(r);
+
         repo.save(e);
+
     }
 
-    public Empleado crearEmpleado(String nombre, Categoria cat, int edad, double sueldo, String estado) {
+    public Empleado crearEmpleado(String nombre, int dni, Categoria cat, int edad, double sueldo, String estado)
+            throws EmpleadoException {
         Empleado empleado = new Empleado();
 
         empleado.setNombre(nombre);
-        cat.agregarEmpleado(empleado);
+        empleado.setDni(dni);
+        
         empleado.setEdad(edad);
         empleado.setSueldo(sueldo);
         empleado.setEstado(estado);
         empleado.setFechaAlta(new Date());
+        cat.agregarEmpleado(empleado);
 
-        repo.save(empleado);
+        this.grabar(empleado);
         return empleado;
     }
 
@@ -54,7 +64,7 @@ public class EmpleadoService {
         return repo.findAll();
     }
 
-    public Empleado actualizarEmpleado(int id, String nombre, int edad, Categoria c) {
+    public Empleado actualizarEmpleado(int id, String nombre, int edad, Categoria c) throws EmpleadoException {
 
         Empleado empleado = empleadoService.buscarPorId(id);
 
@@ -63,28 +73,28 @@ public class EmpleadoService {
         empleado.setEdad(edad);
         empleado.setCategoria(c);
 
-        repo.save(empleado);
+        this.grabar(empleado);
         return empleado;
 
     }
 
-    public Empleado actualizaSueldoEmpleado(int id, double sueldo) {
+    public Empleado actualizaSueldoEmpleado(int id, double sueldo) throws EmpleadoException {
 
         Empleado empleado = empleadoService.buscarPorId(id);
 
         empleado.setSueldo(sueldo);
 
-        repo.save(empleado);
+        this.grabar(empleado);
         return empleado;
     }
 
-    public Empleado daDeBajaEmpleado(int id, String estado, Date fechaBaja) {
+    public Empleado daDeBajaEmpleado(int id, String estado, Date fechaBaja) throws EmpleadoException {
 
         Empleado empleado = empleadoService.buscarPorId(id);
         empleado.setEstado(estado);
         empleado.setFechaBaja(fechaBaja);
 
-        repo.save(empleado);
+        this.grabar(empleado);
         return empleado;
     }
 
@@ -128,7 +138,7 @@ public class EmpleadoService {
         Empleado e = repo.findByDni(empleado.getDni());
         if (e != null) {
             if (empleado.getEmpleadoId() != 0) {
-                if ((empleado.getEmpleadoId() == e.getEmpleadoId())) {
+                if ((empleado.getEmpleadoId() != e.getEmpleadoId())) {
                     return EmpleadoValidationType.EMPLEADO_DUPLICADO;
                 } else {
                     return EmpleadoValidationType.EMPLEADO_OK;

@@ -1,27 +1,31 @@
 package ar.com.ada.api.sueldos.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Empleado
  */
 @Entity
-@Table (name= "empleado")
+@Table(name = "empleado")
 public class Empleado {
 
     @Id
-    @Column (name= "empleado_id")
+    @Column(name = "empleado_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int empleadoId;
-    public String nombre;
-    public int edad;
-    public double sueldo;
-    public String estado;
-    public Date fechaAlta;
-    public Date fechaBaja;
-    public int dni;
+    private int empleadoId;
+    private String nombre;
+    private int edad;
+    private double sueldo;
+    private String estado;
+    private Date fechaAlta;
+    private Date fechaBaja;
+    private int dni;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", referencedColumnName = "categoria_id")
@@ -100,7 +104,18 @@ public class Empleado {
         this.dni = dni;
     }
 
-    
 
-    
+    @JsonIgnore
+    public double getVentasActuales() {
+
+        Random randomGenerator = new Random();
+
+        // Genero un numero rando hasta 10000
+        double venta = randomGenerator.nextDouble() * 10000 + 1;
+        // redondeo en 2 decimales el random truncando
+        venta = ((long) (venta * 100)) / 100d;
+
+        return venta;
+    }
+
 }

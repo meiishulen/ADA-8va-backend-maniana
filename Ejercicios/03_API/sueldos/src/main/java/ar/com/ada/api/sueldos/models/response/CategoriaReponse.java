@@ -6,5 +6,6 @@ package ar.com.ada.api.sueldos.models.response;
 public class CategoriaReponse {
 
     public boolean isOk = false;
+    public int id;
     public String message = "";
 }

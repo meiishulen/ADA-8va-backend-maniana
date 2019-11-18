@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.ada.api.sueldos.entities.Categoria;
 import ar.com.ada.api.sueldos.entities.Empleado;
+import ar.com.ada.api.sueldos.excepciones.EmpleadoException;
 import ar.com.ada.api.sueldos.models.request.EmpleadoRequest;
 import ar.com.ada.api.sueldos.models.response.EmpleadoResponse;
 import ar.com.ada.api.sueldos.services.CategoriaService;
@@ -40,7 +41,23 @@ public class EmpleadoController {
 
         Categoria cat = categoriaService.buscarPorId(req.categoriaId);
 
-        empleadoService.crearEmpleado(req.nombre, cat, req.edad, req.sueldo, req.estado);
+        try {
+
+            empleadoService.crearEmpleado(req.nombre, req.dni, cat, req.edad, req.sueldo, req.estado);
+        } catch (EmpleadoException empEx) {
+
+            e.isOk = false;
+            e.message = "Error " + empEx.getErrorType();
+
+            return ResponseEntity.badRequest().body(e);
+        }
+
+        catch (Exception ex) {
+            e.isOk = false;
+            e.message = "Error General";
+
+            return ResponseEntity.badRequest().body(e);
+        }
 
         e.isOk = true;
         e.message = "Creaste un empleado con éxito.";
@@ -66,7 +83,8 @@ public class EmpleadoController {
     }
 
     @PutMapping("/empleados/{id}") // hay path int porque lo necesito en el /empleados/{id}
-    public ResponseEntity<?> actualizaEmpleado(@PathVariable int id, @RequestBody EmpleadoRequest req) {
+    public ResponseEntity<?> actualizaEmpleado(@PathVariable int id, @RequestBody EmpleadoRequest req)
+            throws EmpleadoException {
 
         EmpleadoResponse e = new EmpleadoResponse();
         Categoria c = categoriaService.buscarPorId(req.categoriaId);
@@ -74,10 +92,20 @@ public class EmpleadoController {
         if (c == null)
             return ResponseEntity.notFound().build();
 
-        Empleado empleado = empleadoService.actualizarEmpleado(id, req.nombre, req.edad, c);
+        try {
 
-        if (empleado == null)
-            return ResponseEntity.notFound().build();
+            Empleado empleado = empleadoService.actualizarEmpleado(id, req.nombre, req.edad, c);
+
+            if (empleado == null)
+                return ResponseEntity.notFound().build();
+
+        } catch (EmpleadoException empEx) {
+
+            e.isOk = false;
+            e.message = "Error " + empEx.getErrorType();
+
+            return ResponseEntity.badRequest().body(e);
+        }
 
         e.isOk = true;
         e.message = "Los datos han sido actualizados.";
@@ -86,7 +114,8 @@ public class EmpleadoController {
     }
 
     @PutMapping("/empleados/{id}/sueldos")
-    public ResponseEntity<?> actualizaSueldoEmpleado(@PathVariable int id, @RequestBody EmpleadoRequest req) {
+    public ResponseEntity<?> actualizaSueldoEmpleado(@PathVariable int id, @RequestBody EmpleadoRequest req)
+            throws EmpleadoException {
         EmpleadoResponse e = new EmpleadoResponse();
 
         Empleado empleado = empleadoService.actualizaSueldoEmpleado(id, req.sueldo);
@@ -101,7 +130,7 @@ public class EmpleadoController {
     }
 
     @DeleteMapping("empleados/{id}")
-    public ResponseEntity<?> daDeBajaEmpleado(@PathVariable int id) {
+    public ResponseEntity<?> daDeBajaEmpleado(@PathVariable int id) throws EmpleadoException {
         EmpleadoResponse e = new EmpleadoResponse();
         Empleado empleado = empleadoService.daDeBajaEmpleado(id, "baja", new Date()); // para que me de la fecha actual
 
